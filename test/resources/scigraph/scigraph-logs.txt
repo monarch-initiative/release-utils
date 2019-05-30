@@ -1,0 +1,108 @@
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:5434183
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:5434129
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:5434207
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00044099
+May 11, 2019 10:44:51 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00005138
+May 11, 2019 10:44:52 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:52 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00044274
+May 11, 2019 10:44:52 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00044273
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00006038
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00006040
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00043990
+May 11, 2019 10:44:54 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00007079
+May 11, 2019 10:44:55 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:55 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:1918333
+May 11, 2019 10:44:55 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3802967
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00019791
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00019788
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00000691
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00000594
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:1922390
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3645943
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3643207
+May 11, 2019 10:44:57 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3645872
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://flybase.org/reports/FBgn0010358
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://flybase.org/reports/FBgn0010359
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://flybase.org/reports/FBgn0050031
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://flybase.org/reports/FBgn0020643
+May 11, 2019 10:44:58 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://flybase.org/reports/FBgn0020644
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3643726
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3705820
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3705800
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3705865
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3705870
+May 11, 2019 10:45:01 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3647662
+May 11, 2019 10:45:02 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:45:02 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00003663
+May 11, 2019 10:45:02 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00014189
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00000065
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: https://www.wormbase.org/get?name=WBGene00000063
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: More than one node in a clique designated as leader. Using failover strategy to elect a leader.
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3644904
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3643785
+May 11, 2019 10:45:05 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader
+SEVERE: http://www.informatics.jax.org/accession/MGI:3647697
+May 11, 2019 10:45:08 AM io.scigraph.owlapi.postprocessors.Clique electCliqueLeader

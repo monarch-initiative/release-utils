@@ -1,0 +1,136 @@
+---
+disease_associations:
+  disease_phenotype.all.tsv:
+  - "association_type:disease_phenotype"
+gene_associations:
+  gene_phenotype.all.tsv:
+  - "association_type:gene_phenotype"
+  gene_phenotype.9606.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  gene_phenotype.7227.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7227\""
+  gene_phenotype.10090.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:10090\""
+  gene_phenotype.7955.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7955\""
+  gene_phenotype.6239.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:6239\""
+  gene_phenotype.559292.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:559292\""
+  gene_phenotype.10116.tsv:
+  - "association_type:gene_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:10116\""
+  gene_phenotype.other.tsv:
+  - "association_type:gene_phenotype"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+  - "-subject_taxon_closure:\"NCBITaxon:7227\""
+  - "-subject_taxon_closure:\"NCBITaxon:10090\""
+  - "-subject_taxon_closure:\"NCBITaxon:7955\""
+  - "-subject_taxon_closure:\"NCBITaxon:6239\""
+  - "-subject_taxon_closure:\"NCBITaxon:559292\""
+  - "-subject_taxon_closure:\"NCBITaxon:10116\""
+  gene_disease.9606.tsv:
+  - "association_type:gene_disease"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  gene_disease.other.tsv:
+  - "association_type:gene_disease"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+  gene_disease.noncausal.tsv:
+  - "association_type:marker_disease"
+variant_associations:
+  variant_phenotype.all.tsv:
+  - "association_type:variant_phenotype"
+  variant_phenotype.9606.tsv:
+  - "association_type:variant_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  variant_phenotype.7227.tsv:
+  - "association_type:variant_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7227\""
+  variant_phenotype.10090.tsv:
+  - "association_type:variant_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:10090\""
+  variant_phenotype.7955.tsv:
+  - "association_type:variant_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7955\""
+  variant_phenotype.6239.tsv:
+  - "association_type:variant_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:6239\""
+  variant_phenotype.other.tsv:
+  - "association_type:variant_phenotype"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+  - "-subject_taxon_closure:\"NCBITaxon:7227\""
+  - "-subject_taxon_closure:\"NCBITaxon:10090\""
+  - "-subject_taxon_closure:\"NCBITaxon:7955\""
+  - "-subject_taxon_closure:\"NCBITaxon:6239\""
+  variant_disease.9606.tsv:
+  - "association_type:variant_disease"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  variant_disease.other.tsv:
+  - "association_type:variant_disease"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+model_associations:
+  model_disease.all.tsv:
+  - "association_type:model_disease"
+  model_disease.9606.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  model_disease.7227.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:7227\""
+  model_disease.10090.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:10090\""
+  model_disease.7955.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:7955\""
+  model_disease.6239.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:6239\""
+  model_disease.559292.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:559292\""
+  model_disease.10116.tsv:
+  - "association_type:model_disease"
+  - "subject_taxon_closure:\"NCBITaxon:10116\""
+  model_disease.other.tsv:
+  - "association_type:model_disease"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+  - "-subject_taxon_closure:\"NCBITaxon:7227\""
+  - "-subject_taxon_closure:\"NCBITaxon:10090\""
+  - "-subject_taxon_closure:\"NCBITaxon:7955\""
+  - "-subject_taxon_closure:\"NCBITaxon:6239\""
+  - "-subject_taxon_closure:\"NCBITaxon:559292\""
+  - "-subject_taxon_closure:\"NCBITaxon:10116\""
+genotype_associations:
+  genotype_phenotype.all.tsv:
+  - "association_type:genotype_phenotype"
+  genotype_phenotype.9606.tsv:
+  - "association_type:genotype_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:9606\""
+  genotype_phenotype.7227.tsv:
+  - "association_type:genotype_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7227\""
+  genotype_phenotype.10090.tsv:
+  - "association_type:genotype_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:10090\""
+  genotype_phenotype.7955.tsv:
+  - "association_type:genotype_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:7955\""
+  genotype_phenotype.6239.tsv:
+  - "association_type:genotype_phenotype"
+  - "subject_taxon_closure:\"NCBITaxon:6239\""
+  genotype_phenotype.other.tsv:
+  - "association_type:genotype_phenotype"
+  - "-subject_taxon_closure:\"NCBITaxon:9606\""
+  - "-subject_taxon_closure:\"NCBITaxon:7227\""
+  - "-subject_taxon_closure:\"NCBITaxon:10090\""
+  - "-subject_taxon_closure:\"NCBITaxon:7955\""
+  - "-subject_taxon_closure:\"NCBITaxon:6239\""
+  genotype_disease.all.tsv:
+  - "association_type:genotype_disease"
