@@ -63,7 +63,12 @@ scigraph_ontology_queries:
     - field
     - count
   nodes with subClassOf cycles (depth 2):
-    query: MATCH (n)-[:subClassOf*1..2]->(n) RETURN COUNT(DISTINCT(n)) as node_count
+    query: MATCH (n)-[:subClassOf*2]->(n) RETURN COUNT(DISTINCT(n)) as node_count
+    headers:
+    - field
+    - count
+  nodes with subClassOf cycles (depth 1):
+    query: MATCH (n)-[:subClassOf]->(n) RETURN COUNT(DISTINCT(n)) as node_count
     headers:
     - field
     - count
@@ -89,7 +94,7 @@ solr_facet_queries:
     - count
   Gene Variant Associations By Taxa:
     filters:
-    - association_type:gene_variant
+    - association_type:variant_gene
     facet.field: object_taxon_label
     headers:
     - species
@@ -97,7 +102,7 @@ solr_facet_queries:
     skip_diff: true
   Gene Variant Associations By Source:
     filters:
-    - association_type:gene_variant
+    - association_type:variant_gene
     facet.field: is_defined_by
     headers:
     - source
@@ -113,7 +118,7 @@ solr_facet_queries:
   Gene Disease Causal Associations By Source:
     filters:
     - association_type:gene_disease
-    facet.field: subject_taxon_label
+    facet.field: is_defined_by
     headers:
     - species
     - count
@@ -128,7 +133,7 @@ solr_facet_queries:
   Gene Disease Non-Causal Associations By Source:
     filters:
     - association_type:marker_disease
-    facet.field: subject_taxon_label
+    facet.field: is_defined_by
     headers:
     - species
     - count
@@ -142,14 +147,14 @@ solr_facet_queries:
     skip_diff: true
   Gene Interactions By Source:
     filters:
-    - association_type:gene_interactions
+    - association_type:gene_interaction
     facet.field: is_defined_by
     headers:
     - source
     - count
   Gene Interactions By Subject Taxa:
     filters:
-    - association_type:gene_interactions
+    - association_type:gene_interaction
     facet.field: subject_taxon_label
     headers:
     - source
