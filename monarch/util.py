@@ -3,6 +3,7 @@ from monarch.markdown import add_md_header, add_href, add_md_table,\
 from typing import List, Dict, Union, Any, Set
 from requests import Request, Session
 from json.decoder import JSONDecodeError
+from pathlib import Path
 import logging
 import itertools
 import copy
@@ -56,7 +57,13 @@ def get_facets(solr_server: str,
     facet = params['facet.field']
     result_count = response['response']['numFound']
     facet_result = response['facet_counts']['facet_fields'][facet]
-    facet_obj = dict(itertools.zip_longest(*[iter(facet_result)] * 2, fillvalue=""))
+    facet_obj = {}
+    for facet_key, facet_count in zip(facet_result[::2], facet_result[1::2]):
+        if facet_key.startswith('http'):
+            facet_key = Path(facet_key).stem
+        facet_key = facet_key.replace('/', '|').replace('(', '|').replace(')', '|')
+        facet_obj[facet_key] = facet_count
+
     res_sum = sum([v for k, v in facet_obj.items()])
 
     # Note that this only works for scalars, so setting other to 0 for list fields
