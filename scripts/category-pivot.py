@@ -42,6 +42,7 @@ def main():
         # other informative labels, such as sequence feature, so we
         # artificially push these to the top
         cat_frequency = csv.reader(csvfile)
+        next(cat_frequency)
         for row in cat_frequency:
             category_frequencies.append(row[0])
 
@@ -50,6 +51,8 @@ def main():
             category_frequencies.index("Class")))
         category_frequencies.insert(0, category_frequencies.pop(
             category_frequencies.index("NamedIndividual")))
+        category_frequencies.insert(0, category_frequencies.pop(
+            category_frequencies.index("cliqueLeader")))
 
         # Variant is the more informative label
         category_frequencies.insert(0, category_frequencies.pop(
@@ -57,6 +60,7 @@ def main():
 
     with open(args.edge_labels) as csvfile:
         edge_labels = csv.reader(csvfile)
+        next(edge_labels)
         for row in edge_labels:
             iri, label = row
             if label.startswith('['):
@@ -66,8 +70,9 @@ def main():
 
     with open(args.pivot) as csvfile:
         cat_pivot = csv.reader(csvfile)
+        next(cat_pivot)
         for row in cat_pivot:
-            if not row[4]: continue
+            # if not row[4]: continue
             subject_cats = ast.literal_eval(row[0])
             object_cats = ast.literal_eval(row[1])
             subject_category = get_most_informative_category(subject_cats,
@@ -86,9 +91,10 @@ def main():
             else:
                 sources = [sources]
             for source in sources:
-                if source.startswith("https://data.monarch"):
+                if source.startswith("https://data.monarch") or source.startswith("https://archive.monarch"):
                     source = source.replace("https://data.monarchinitiative.org/ttl/", "")
-                    source = re.sub(r'\..*$', '', source)
+                    source = source.replace("https://archive.monarchinitiative.org/#", "")
+                    # source = re.sub(r'\..*$', '', source)
                     table_key = "-".join([
                         subject_category,
                         edge_label,
