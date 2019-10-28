@@ -11,6 +11,11 @@ scigraph_data_queries:
     headers:
     - field
     - count
+  Variant Disease Mix-ups:
+    query: MATCH (n:variant) WHERE n:disease RETURN COUNT(DISTINCT(n)) as variant
+    headers:
+    - field
+    - count
   Gene Variant Mix-ups:
     query: MATCH (n:variant) WHERE n:gene RETURN COUNT(DISTINCT(n)) as variant
     headers:
@@ -21,11 +26,19 @@ scigraph_data_queries:
     headers:
     - field
     - count
-  Genes in more than one taxa:
+  Genes in more than one taxa (pass inferred, not distinct):
     query: |
       MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
       WHERE taxon1 <> taxon2 AND NOT (taxon1)-[:subClassOf]-(taxon2)
-      RETURN COUNT(DISTINCT(n)) as genes
+      RETURN COUNT(n) as genes
+    headers:
+    - field
+    - count
+  Genes in more than one taxa (fail inferred, not distinct):
+    query: |
+      MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
+      WHERE taxon1 <> taxon2
+      RETURN COUNT(n) as genes
     headers:
     - field
     - count
@@ -34,8 +47,18 @@ scigraph_data_queries:
     headers:
     - field
     - count
-  Variant Loci:
-    query: MATCH (n:`variant locus`) RETURN COUNT(DISTINCT(n)) as variants
+  Diseases:
+    query: MATCH (n:disease) RETURN COUNT(DISTINCT(n)) as disease
+    headers:
+    - field
+    - count
+  Phenotypes:
+    query: MATCH (n:phenotype) RETURN COUNT(DISTINCT(n)) as phenotype
+    headers:
+    - field
+    - count
+  Variants:
+    query: MATCH (n:variant) RETURN COUNT(DISTINCT(n)) as variants
     headers:
     - field
     - count
