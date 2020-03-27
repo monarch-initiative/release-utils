@@ -42,6 +42,13 @@ scigraph_data_queries:
     headers:
     - field
     - count
+  Direct human gene to phenotype across RO has phenotype:
+    query: |
+      MATCH (z:Node{iri:'NCBITaxon:9606'})<-[:RO:0002162]-(n:gene)-[:RO:0002200]->(x:phenotype)
+      RETURN COUNT(DISTINCT(n.iri)) as genes
+    headers:
+    - field
+    - count
   Genes:
     query: MATCH (n:gene) RETURN COUNT(DISTINCT(n)) as genes
     headers:
