@@ -413,3 +413,13 @@ solr_facet_queries:
     headers:
     - relation
     - count
+  Direct human gene to phenotype across RO has phenotype:
+    filters:
+    - association_type:gene_phenotype
+    - subject_taxon:"NCBITaxon:9606"
+    - relation:"RO:0002200"
+    - qualifier:direct
+    facet.field: subject_taxon_label
+    headers:
+    - species
+    - count
