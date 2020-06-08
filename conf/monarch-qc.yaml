@@ -7,22 +7,22 @@ scigraph-ontology-prod: https://scigraph-ontology.monarchinitiative.org/scigraph
 scigraph-ontology-dev: https://scigraph-ontology-dev.monarchinitiative.org/scigraph/cypher/execute.json
 scigraph_data_queries:
   Gene Disease Mix-ups:
-    query: MATCH (n:gene) WHERE n:disease RETURN COUNT(DISTINCT(n)) as gene
+    query: MATCH (n:gene) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as gene
     headers:
     - field
     - count
   Variant Disease Mix-ups:
-    query: MATCH (n:variant) WHERE n:disease RETURN COUNT(DISTINCT(n)) as variant
+    query: MATCH (n:variant) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
     headers:
     - field
     - count
   Gene Variant Mix-ups:
-    query: MATCH (n:variant) WHERE n:gene RETURN COUNT(DISTINCT(n)) as variant
+    query: MATCH (n:variant) WHERE n:gene AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
     headers:
     - field
     - count
   Disease Phenotype Mix-ups:
-    query: MATCH (n:disease) WHERE n:phenotype RETURN COUNT(DISTINCT(n)) as disease
+    query: MATCH (n:disease) WHERE n:phenotype AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as disease
     headers:
     - field
     - count
