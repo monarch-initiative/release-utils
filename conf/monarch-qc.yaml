@@ -26,19 +26,27 @@ scigraph_data_queries:
     headers:
     - field
     - count
-  Genes in more than one taxa (pass inferred, not distinct):
+  Genes in more than one taxa (pass inferred):
     query: |
       MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
-      WHERE taxon1 <> taxon2 AND NOT (taxon1)-[:subClassOf]-(taxon2)
-      RETURN COUNT(n) as genes
+      WHERE (n:cliqueLeader) AND taxon1 <> taxon2 AND NOT (taxon1)-[:subClassOf]-(taxon2)
+      RETURN DISTINCT(COUNT(n)) as genes
     headers:
     - field
     - count
-  Genes in more than one taxa (fail inferred, not distinct):
+  Genes in more than one taxa (fail inferred):
     query: |
       MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
-      WHERE taxon1 <> taxon2
-      RETURN COUNT(n) as genes
+      WHERE (n:cliqueLeader) AND taxon1 <> taxon2
+      RETURN DISTINCT(COUNT(n)) as genes
+    headers:
+    - field
+    - count
+  Genes with no taxon:
+    query: |
+      MATCH (gene:gene)
+      WHERE NOT (gene)-[:RO:0002162]->() AND (gene:cliqueLeader)
+      RETURN COUNT(DISTINCT(gene)) as genes
     headers:
     - field
     - count
