@@ -50,7 +50,7 @@ scigraph_data_queries:
     headers:
     - field
     - count
- Features with no taxon:
+  Features with no taxon:
     query: |
       MATCH (feature:`sequence feature`)
       WHERE NOT (feature)-[:RO:0002162]->() AND (feature:cliqueLeader)
