@@ -50,6 +50,14 @@ scigraph_data_queries:
     headers:
     - field
     - count
+ Features with no taxon:
+    query: |
+      MATCH (feature:`sequence feature`)
+      WHERE NOT (feature)-[:RO:0002162]->() AND (feature:cliqueLeader)
+      RETURN COUNT(DISTINCT(feature)) as features
+    headers:
+    - field
+    - count
   Direct human gene to phenotype across RO has phenotype:
     query: |
       MATCH (z:Node{iri:'NCBITaxon:9606'})<-[:RO:0002162]-(n:gene)-[:RO:0002200]->(x:phenotype)
