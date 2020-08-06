@@ -1,4 +1,7 @@
 ---
+disease_associations:
+  disease_phenotype.all.tsv:
+  - "association_type:disease_phenotype"
 gene_associations:
   gene_phenotype.all.tsv:
   - "association_type:gene_phenotype"
