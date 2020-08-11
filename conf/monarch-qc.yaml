@@ -58,7 +58,7 @@ scigraph_data_queries:
     headers:
     - field
     - count
-  Direct human gene to phenotype across RO has phenotype:
+  Direct human gene to phenotype across RO has phenotype (number of genes):
     query: |
       MATCH (z:Node{iri:'NCBITaxon:9606'})<-[:RO:0002162]-(n:gene)-[:RO:0002200]->(x:phenotype)
       RETURN COUNT(DISTINCT(n.iri)) as genes
@@ -429,7 +429,7 @@ solr_facet_queries:
     headers:
     - relation
     - count
-  Direct human gene to phenotype across RO has phenotype:
+  Direct human gene to phenotype across RO has phenotype (number of associations):
     filters:
     - association_type:gene_phenotype
     - subject_taxon:"NCBITaxon:9606"
