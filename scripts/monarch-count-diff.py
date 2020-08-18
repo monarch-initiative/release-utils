@@ -33,8 +33,8 @@ def main():
     dir_path.mkdir(exist_ok=True)
     threshold = float(args.threshold/100)
 
-    diff_path = dir_path / 'solr-diff.md'
-    diff_file = diff_path.open("w")
+    solr_diff_path = dir_path / 'solr-diff.md'
+    solr_diff_file = solr_diff_path.open("w")
 
     diff_html_path = dir_path / 'solr-diff.html'
     diff_html_file = diff_html_path.open("w")
@@ -78,7 +78,7 @@ def main():
     scigraph_ontology_dev = config['scigraph-ontology-dev']
     scigraph_ontology_prod = config['scigraph-ontology-prod']
 
-    diff_file.write("{}\n".format(add_md_header("Solr Queries", 3)))
+    solr_diff_file.write("{}\n".format(add_md_header("Solr Queries", 3)))
 
     # Process solr queries
     for q_name, query in config['solr_facet_queries'].items():
@@ -127,27 +127,27 @@ def main():
                     diff_file.write("{}\t{}\n".format(sub, obj))
             diff_file.close()
 
-        diff_file.write("{}\n".format(add_md_header(q_name, 4)))
+        solr_diff_file.write("{}\n".format(add_md_header(q_name, 4)))
         sesh = Session()
         prod_req = sesh.prepare_request(Request('GET', solr_prod, params=golr_facet_params))
         dev_req = sesh.prepare_request(Request('GET', solr_dev, params=golr_facet_params))
 
-        diff_file.write(add_href(prod_req.url, "Production Query"))
-        diff_file.write('\n\n')
-        diff_file.write(add_href(dev_req.url, "Dev Query"))
-        diff_file.write('\n\n')
+        solr_diff_file.write(add_href(prod_req.url, "Production Query"))
+        solr_diff_file.write('\n\n')
+        solr_diff_file.write(add_href(dev_req.url, "Dev Query"))
+        solr_diff_file.write('\n\n')
 
         diff_list = [(k, v) for k, v in formatted_diff.items()]
         diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
-        diff_file.write(add_md_table(diff_list, query['headers']))
-        diff_file.write('\n\n')
+        solr_diff_file.write(add_md_table(diff_list, query['headers']))
+        solr_diff_file.write('\n\n')
 
-    diff_file.close()
-    diff_file = diff_path.open("r")
-    html = markdown.markdown(diff_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
+    solr_diff_file.close()
+    solr_diff_file = solr_diff_path.open("r")
+    html = markdown.markdown(solr_diff_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
     diff_html_file.write(html)
     diff_html_file.close()
-    diff_file.close()
+    solr_diff_file.close()
 
     ######## Monarch Rules ###
     ##########################
