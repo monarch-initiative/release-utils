@@ -42,8 +42,6 @@ def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
         diff = diff_facets(_process_scigraph_categories(dev_results), _process_scigraph_categories(prod_results))
         formatted_diff = convert_diff_to_md(diff)
 
-    output_md += "{}\n".format(add_md_header(category_cypher, 4))
-
     params = {
         'cypherQuery': category_cypher,
         'limit': 1000
