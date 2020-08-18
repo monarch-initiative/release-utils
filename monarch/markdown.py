@@ -1,5 +1,5 @@
 import logging
-from typing import List, Tuple, Iterable
+from typing import List, Tuple, Iterable, Union
 
 
 logging.basicConfig(level=logging.INFO)
@@ -17,15 +17,15 @@ def add_md_header(header: str, size: int=1) -> str:
     return "{} {}".format(('#'*size), header)
 
 
-def add_italics(text: str) -> str:
+def add_italics(text: Union[str,int]) -> str:
     return "_{}_".format(text)
 
 
-def add_bold(text: str) -> str:
+def add_bold(text: Union[str,int]) -> str:
     return "__{}__".format(text)
 
 
-def add_href(link: str, display_name: str) -> str:
+def add_href(link: str, display_name: Union[str,int]) -> str:
     return "[{}]({})".format(display_name, link)
 
 

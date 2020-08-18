@@ -13,7 +13,7 @@ import copy
 import re
 import markdown
 from monarch.markdown import add_md_header, add_href, add_md_table
-from monarch.util import get_facets, get_scigraph_diff,\
+from monarch.util import get_scigraph_category_diff, get_facets, get_scigraph_diff,\
     get_solr_so_pairs, diff_solr_so_data, diff_facets, convert_diff_to_md
 
 logging.basicConfig(level=logging.INFO)
@@ -26,18 +26,30 @@ def main():
     parser.add_argument('--config', '-c', required=True, help='yaml configuration file')
     parser.add_argument('--out', '-o', required=False, help='output directory', default="./")
     parser.add_argument('--threshold', '-t', required=False, help='diff threshold', default=10, type=int)
-    parser.add_argument('--quick', '-q', required=False, help='Do not dump data diffs',
+    parser.add_argument('--quick', required=False, help='Do not dump data diffs',
                         default=False, action='store_true')
     args = parser.parse_args()
     dir_path = Path(args.out)
     dir_path.mkdir(exist_ok=True)
     threshold = float(args.threshold/100)
 
-    md_path = dir_path / 'monarch-diff.md'
-    md_file = md_path.open("w")
+    diff_path = dir_path / 'solr-diff.md'
+    diff_file = diff_path.open("w")
 
-    html_path = dir_path / 'monarch-diff.html'
-    html_file = html_path.open("w")
+    diff_html_path = dir_path / 'solr-diff.html'
+    diff_html_file = diff_html_path.open("w")
+
+    rules_path = dir_path / 'monarch-rules.md'
+    rules_file = rules_path.open("w")
+
+    rules_html_path = dir_path / 'monarch-rules.html'
+    rules_html_file = rules_html_path.open("w")
+
+    scicat_path = dir_path / 'scigraph-categories.md'
+    scicat_file = scicat_path.open("w")
+
+    scicat_html_path = dir_path / 'scigraph-categories.html'
+    scicat_html_file = scicat_html_path.open("w")
 
     golr_facet_params = {
         'q': '*:*',
@@ -66,14 +78,14 @@ def main():
     scigraph_ontology_dev = config['scigraph-ontology-dev']
     scigraph_ontology_prod = config['scigraph-ontology-prod']
 
-    md_file.write("{}\n".format(add_md_header("Solr Queries", 3)))
+    diff_file.write("{}\n".format(add_md_header("Solr Queries", 3)))
 
     # Process solr queries
     for q_name, query in config['solr_facet_queries'].items():
         golr_facet_params['fq'] = query['filters']
         golr_facet_params['facet.field'] = query['facet.field']
-        prod_results = get_facets(solr_prod, golr_facet_params)
-        dev_results = get_facets(solr_dev, golr_facet_params)
+        prod_results, prod_facet_map = get_facets(solr_prod, golr_facet_params)
+        dev_results, dev_facet_map = get_facets(solr_dev, golr_facet_params)
         diff = diff_facets(dev_results, prod_results)
         formatted_diff = convert_diff_to_md(diff)
 
@@ -101,9 +113,9 @@ def main():
             params = copy.deepcopy(golr_default_params)
             params['fq'] = copy.deepcopy(query['filters'])
             if dropped_data == 'Other':
-                params['fq'].append('-{}:[* TO *]'.format(query['facet.field'], dropped_data))
+                params['fq'].append('-{}:[* TO *]'.format(query['facet.field']))
             else:
-                params['fq'].append('{}:"{}"'.format(query['facet.field'], dropped_data))
+                params['fq'].append('{}:"{}"'.format(query['facet.field'], prod_facet_map[dropped_data]))
             logger.info("Processing data diff for params {}".format(params['fq']))
 
             query_pairs = get_solr_so_pairs(solr_dev, params)
@@ -115,37 +127,63 @@ def main():
                     diff_file.write("{}\t{}\n".format(sub, obj))
             diff_file.close()
 
-        md_file.write("{}\n".format(add_md_header(q_name, 4)))
+        diff_file.write("{}\n".format(add_md_header(q_name, 4)))
         sesh = Session()
         prod_req = sesh.prepare_request(Request('GET', solr_prod, params=golr_facet_params))
         dev_req = sesh.prepare_request(Request('GET', solr_dev, params=golr_facet_params))
 
-        md_file.write(add_href(prod_req.url, "Production Query"))
-        md_file.write('\n\n')
-        md_file.write(add_href(dev_req.url, "Dev Query"))
-        md_file.write('\n\n')
+        diff_file.write(add_href(prod_req.url, "Production Query"))
+        diff_file.write('\n\n')
+        diff_file.write(add_href(dev_req.url, "Dev Query"))
+        diff_file.write('\n\n')
 
         diff_list = [(k, v) for k, v in formatted_diff.items()]
         diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
-        md_file.write(add_md_table(diff_list, query['headers']))
-        md_file.write('\n\n')
+        diff_file.write(add_md_table(diff_list, query['headers']))
+        diff_file.write('\n\n')
 
-    md_file.write("{}\n".format(add_md_header("SciGraph Queries", 3)))
+    diff_file.close()
+    diff_file = diff_path.open("r")
+    html = markdown.markdown(diff_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
+    diff_html_file.write(html)
+    diff_html_file.close()
+    diff_file.close()
 
-    for q_name, query in config['scigraph_data_queries'].items():
-        md_file.write(get_scigraph_diff(
+    ######## Monarch Rules ###
+    ##########################
+
+    rules_file.write("{}\n".format(add_md_header("Monarch Rules", 3)))
+
+    for q_name, query in config['monarch_rules']['scigraph_data_queries'].items():
+        rules_file.write(get_scigraph_diff(
             scigraph_data_prod, scigraph_data_dev, query, q_name))
 
-    for q_name, query in config['scigraph_ontology_queries'].items():
-        md_file.write(get_scigraph_diff(
+    for q_name, query in config['monarch_rules']['scigraph_ontology_queries'].items():
+        rules_file.write(get_scigraph_diff(
             scigraph_ontology_prod, scigraph_ontology_dev, query, q_name))
 
-    md_file.close()
-    md_file = md_path.open("r")
-    html = markdown.markdown(md_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
-    html_file.write(html)
-    html_file.close()
-    md_file.close()
+    rules_file.close()
+    rules_file = rules_path.open("r")
+    html = markdown.markdown(rules_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
+    rules_html_file.write(html)
+    rules_html_file.close()
+    rules_file.close()
+
+
+    ######## Scigraph categories ###
+    ################################
+
+    scicat_file.write("{}\n".format(add_md_header("SciGraph Categories", 3)))
+
+    # Get categories for dev
+    scicat_file.write(get_scigraph_category_diff(scigraph_data_prod, scigraph_data_dev))
+
+    scicat_file.close()
+    scicat_file = scicat_path.open("r")
+    html = markdown.markdown(scicat_file.read(), output_format='html5', extensions=['markdown.extensions.tables'])
+    scicat_html_file.write(html)
+    scicat_html_file.close()
+    scicat_file.close()
 
 
 if __name__ == "__main__":

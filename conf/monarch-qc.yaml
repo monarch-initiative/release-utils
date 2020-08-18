@@ -5,119 +5,85 @@ scigraph-data-prod: https://scigraph-data.monarchinitiative.org/scigraph/cypher/
 scigraph-data-dev: https://scigraph-data-dev.monarchinitiative.org/scigraph/cypher/execute.json
 scigraph-ontology-prod: https://scigraph-ontology.monarchinitiative.org/scigraph/cypher/execute.json
 scigraph-ontology-dev: https://scigraph-ontology-dev.monarchinitiative.org/scigraph/cypher/execute.json
-scigraph_data_queries:
-  Gene Disease Mix-ups:
-    query: MATCH (n:gene) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as gene
-    headers:
-    - field
-    - count
-  Variant Disease Mix-ups:
-    query: MATCH (n:variant) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
-    headers:
-    - field
-    - count
-  Gene Variant Mix-ups:
-    query: MATCH (n:variant) WHERE n:gene AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
-    headers:
-    - field
-    - count
-  Disease Phenotype Mix-ups:
-    query: MATCH (n:disease) WHERE n:phenotype AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as disease
-    headers:
-    - field
-    - count
-  Genes in more than one taxa (pass inferred):
-    query: |
-      MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
-      WHERE (n:cliqueLeader) AND taxon1 <> taxon2 AND NOT (taxon1)-[:subClassOf]-(taxon2)
-      RETURN DISTINCT(COUNT(n)) as genes
-    headers:
-    - field
-    - count
-  Genes in more than one taxa (fail inferred):
-    query: |
-      MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
-      WHERE (n:cliqueLeader) AND taxon1 <> taxon2
-      RETURN DISTINCT(COUNT(n)) as genes
-    headers:
-    - field
-    - count
-  Genes with no taxon:
-    query: |
-      MATCH (gene:gene)
-      WHERE NOT (gene)-[:RO:0002162]->() AND (gene:cliqueLeader)
-      RETURN COUNT(DISTINCT(gene)) as genes
-    headers:
-    - field
-    - count
-  Features with no taxon:
-    query: |
-      MATCH (feature:`sequence feature`)
-      WHERE NOT (feature)-[:RO:0002162]->() AND (feature:cliqueLeader)
-      RETURN COUNT(DISTINCT(feature)) as features
-    headers:
-    - field
-    - count
-  Direct human gene to phenotype across RO has phenotype (number of genes):
-    query: |
-      MATCH (z:Node{iri:'NCBITaxon:9606'})<-[:RO:0002162]-(n:gene)-[:RO:0002200]->(x:phenotype)
-      RETURN COUNT(DISTINCT(n.iri)) as genes
-    headers:
-    - field
-    - count
-  Genes:
-    query: MATCH (n:gene) RETURN COUNT(DISTINCT(n)) as genes
-    headers:
-    - field
-    - count
-  Diseases:
-    query: MATCH (n:disease) RETURN COUNT(DISTINCT(n)) as disease
-    headers:
-    - field
-    - count
-  Phenotypes:
-    query: MATCH (n:phenotype) RETURN COUNT(DISTINCT(n)) as phenotype
-    headers:
-    - field
-    - count
-  Variants:
-    query: MATCH (n:variant) RETURN COUNT(DISTINCT(n)) as variants
-    headers:
-    - field
-    - count
-  Genotypes:
-    query: MATCH (n:genotype) RETURN COUNT(DISTINCT(n)) as genotypes
-    headers:
-    - field
-    - count
-  Sequence Features:
-    query: MATCH (n:`sequence feature`) RETURN COUNT(DISTINCT(n)) as features
-    headers:
-    - field
-    - count
-  Reagent Targeted Gene:
-    query: MATCH (n:`reagent targeted gene`) RETURN COUNT(DISTINCT(n)) as rtg
-    headers:
-    - field
-    - count
-scigraph_ontology_queries:
-  Number of edges connected to owl:Nothing:
-    query: |
-      MATCH (nothing:Node{iri:'http://www.w3.org/2002/07/owl#Nothing'})-[rel]-(n)
-      RETURN COUNT(DISTINCT(rel)) as nothing
-    headers:
-    - field
-    - count
-  nodes with subClassOf cycles (depth 2):
-    query: MATCH (n)-[:subClassOf*2]->(n) RETURN COUNT(DISTINCT(n)) as node_count
-    headers:
-    - field
-    - count
-  nodes with subClassOf cycles (depth 1):
-    query: MATCH (n)-[:subClassOf]->(n) RETURN COUNT(DISTINCT(n)) as node_count
-    headers:
-    - field
-    - count
+monarch_rules:
+  scigraph_data_queries:
+    Gene and Disease are disjoint:
+      query: MATCH (n:gene) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as gene
+      headers:
+      - field
+      - count
+    Variant and Disease are disjoint:
+      query: MATCH (n:variant) WHERE n:disease AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
+      headers:
+      - field
+      - count
+    Gene and Variant are disjoint:
+      query: MATCH (n:variant) WHERE n:gene AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as variant
+      headers:
+      - field
+      - count
+    Disease and Phenotype are disjoint:
+      query: MATCH (n:disease) WHERE n:phenotype AND n:cliqueLeader RETURN COUNT(DISTINCT(n)) as disease
+      headers:
+      - field
+      - count
+    Genes in more than one taxa (pass inferred):
+      query: |
+        MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
+        WHERE (n:cliqueLeader) AND taxon1 <> taxon2 AND NOT (taxon1)-[:subClassOf]-(taxon2)
+        RETURN DISTINCT(COUNT(n)) as genes
+      headers:
+      - field
+      - count
+    Genes in more than one taxa (fail inferred):
+      query: |
+        MATCH (taxon1)<-[:RO:0002162]-(n:gene)-[:RO:0002162]->(taxon2)
+        WHERE (n:cliqueLeader) AND taxon1 <> taxon2
+        RETURN DISTINCT(COUNT(n)) as genes
+      headers:
+      - field
+      - count
+    Genes with no taxon:
+      query: |
+        MATCH (gene:gene)
+        WHERE NOT (gene)-[:RO:0002162]->() AND (gene:cliqueLeader)
+        RETURN COUNT(DISTINCT(gene)) as genes
+      headers:
+      - field
+      - count
+    Features with no taxon:
+      query: |
+        MATCH (feature:`sequence feature`)
+        WHERE NOT (feature)-[:RO:0002162]->() AND (feature:cliqueLeader)
+        RETURN COUNT(DISTINCT(feature)) as features
+      headers:
+      - field
+      - count
+    Direct human gene to phenotype across RO has phenotype (number of genes):
+      query: |
+        MATCH (z:Node{iri:'NCBITaxon:9606'})<-[:RO:0002162]-(n:gene)-[:RO:0002200]->(x:phenotype)
+        RETURN COUNT(DISTINCT(n.iri)) as genes
+      headers:
+      - field
+      - count
+  scigraph_ontology_queries:
+    Number of edges connected to owl:Nothing:
+      query: |
+        MATCH (nothing:Node{iri:'http://www.w3.org/2002/07/owl#Nothing'})-[rel]-(n)
+        RETURN COUNT(DISTINCT(rel)) as nothing
+      headers:
+      - field
+      - count
+    nodes with subClassOf cycles (depth 2):
+      query: MATCH (n)-[:subClassOf*2]->(n) RETURN COUNT(DISTINCT(n)) as node_count
+      headers:
+      - field
+      - count
+    nodes with subClassOf cycles (depth 1):
+      query: MATCH (n)-[:subClassOf]->(n) RETURN COUNT(DISTINCT(n)) as node_count
+      headers:
+      - field
+      - count
 solr_facet_queries:
   # List of all association types can be found here:
   # https://solr.monarchinitiative.org/solr/golr/select/?
@@ -428,14 +394,4 @@ solr_facet_queries:
     facet.field: relation_label
     headers:
     - relation
-    - count
-  Direct human gene to phenotype across RO has phenotype (number of associations):
-    filters:
-    - association_type:gene_phenotype
-    - subject_taxon:"NCBITaxon:9606"
-    - relation:"RO:0002200"
-    - qualifier:direct
-    facet.field: subject_taxon_label
-    headers:
-    - species
     - count
