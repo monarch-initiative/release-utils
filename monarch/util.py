@@ -112,7 +112,8 @@ def get_facets(solr_server: str,
         if facet_key.startswith('http'):
             facet_key = Path(facet_key).stem.replace("#", "")
         # For odd species and strain nomenclature
-        facet_key = facet_key.replace('/', '|').replace('(', '|').replace(')', '|')
+        facet_key = \
+            facet_key.replace('/', '|').replace('(', '|').replace(')', '|').replace('<', '').replace('>', '')
         facet_obj[facet_key] = facet_count
         facet_map[facet_key] = facet_original
 
