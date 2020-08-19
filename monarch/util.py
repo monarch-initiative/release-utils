@@ -75,7 +75,7 @@ def get_scigraph_diff(scigraph_prod: str, scigraph_dev: str,
         diff = diff_facets(dev_results, prod_results)
         formatted_diff = convert_diff_to_md(diff)
 
-    output_md += "{}\n".format(add_md_header(query_name, 4))
+    output_md += "{}\n".format(add_md_header(query_name, 3))
 
     params = {
         'cypherQuery': conf['query']

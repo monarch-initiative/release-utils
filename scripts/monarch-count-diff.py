@@ -78,7 +78,7 @@ def main():
     scigraph_ontology_dev = config['scigraph-ontology-dev']
     scigraph_ontology_prod = config['scigraph-ontology-prod']
 
-    solr_diff_file.write("{}\n".format(add_md_header("Solr Queries", 3)))
+    solr_diff_file.write("{}\n".format(add_md_header("Solr Queries", 2)))
 
     # Process solr queries
     for q_name, query in config['solr_facet_queries'].items():
@@ -127,7 +127,7 @@ def main():
                     diff_file.write("{}\t{}\n".format(sub, obj))
             diff_file.close()
 
-        solr_diff_file.write("{}\n".format(add_md_header(q_name, 4)))
+        solr_diff_file.write("{}\n".format(add_md_header(q_name, 3)))
         sesh = Session()
         prod_req = sesh.prepare_request(Request('GET', solr_prod, params=golr_facet_params))
         dev_req = sesh.prepare_request(Request('GET', solr_dev, params=golr_facet_params))
@@ -152,7 +152,7 @@ def main():
     ######## Monarch Rules ###
     ##########################
 
-    rules_file.write("{}\n".format(add_md_header("Monarch Rules", 3)))
+    rules_file.write("{}\n".format(add_md_header("Monarch Rules", 2)))
 
     for q_name, query in config['monarch_rules']['scigraph_data_queries'].items():
         rules_file.write(get_scigraph_diff(
@@ -173,7 +173,7 @@ def main():
     ######## Scigraph categories ###
     ################################
 
-    scicat_file.write("{}\n".format(add_md_header("SciGraph Categories", 3)))
+    scicat_file.write("{}\n".format(add_md_header("SciGraph Categories", 2)))
 
     # Get categories for dev
     scicat_file.write(get_scigraph_category_diff(scigraph_data_prod, scigraph_data_dev))
