@@ -108,7 +108,7 @@ def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
     output_md += '  \n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
-    diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
+    diff_list.sort(key=lambda tup: int(re.search(r'[\d,]+', tup[1]).group(0).replace(',', '')), reverse=True)
     output_md += add_md_table(diff_list, ['Category', 'Count'])
     output_md += "\n\n"
 
@@ -147,7 +147,7 @@ def get_scigraph_diff(scigraph_prod: str, scigraph_dev: str,
     output_md += '  \n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
-    diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
+    diff_list.sort(key=lambda tup: int(re.search(r'[\d,]+', tup[1]).group(0).replace(',', '')), reverse=True)
     output_md += add_md_table(diff_list, conf['headers'])
     output_md += "\n\n"
 
