@@ -1,10 +1,10 @@
 ---
 solr-prod: https://solr.monarchinitiative.org/solr/golr/select/
 solr-dev: https://solr-dev.monarchinitiative.org/solr/golr/select/
-scigraph-data-prod: https://scigraph-data.monarchinitiative.org/scigraph/cypher/execute.json
-scigraph-data-dev: https://scigraph-data-dev.monarchinitiative.org/scigraph/cypher/execute.json
-scigraph-ontology-prod: https://scigraph-ontology.monarchinitiative.org/scigraph/cypher/execute.json
-scigraph-ontology-dev: https://scigraph-ontology-dev.monarchinitiative.org/scigraph/cypher/execute.json
+scigraph-data-prod: https://scigraph-data.monarchinitiative.org/scigraph/
+scigraph-data-dev: https://scigraph-data-dev.monarchinitiative.org/scigraph/
+scigraph-ontology-prod: https://scigraph-ontology.monarchinitiative.org/scigraph/
+scigraph-ontology-dev: https://scigraph-ontology-dev.monarchinitiative.org/scigraph/
 monarch_rules:
   scigraph_data_queries:
     Gene and Disease are disjoint:

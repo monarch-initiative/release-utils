@@ -14,7 +14,8 @@ import re
 import markdown
 from monarch.markdown import add_md_header, add_href, add_md_table
 from monarch.util import get_scigraph_category_diff, get_facets, get_scigraph_diff,\
-    get_solr_so_pairs, diff_solr_so_data, diff_facets, convert_diff_to_md
+    get_solr_so_pairs, diff_solr_so_data, diff_facets,\
+    convert_diff_to_md, get_version_metadata
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -50,6 +51,9 @@ def main():
 
     scicat_html_path = dir_path / 'scigraph-categories.html'
     scicat_html_file = scicat_html_path.open("w")
+
+    metadata_path = dir_path / 'metadata.md'
+    metadata_file = metadata_path.open("w")
 
     golr_facet_params = {
         'q': '*:*',
@@ -184,6 +188,12 @@ def main():
     scicat_html_file.write(html)
     scicat_html_file.close()
     scicat_file.close()
+
+    ######## Scigraph version metadata ###
+    ################################
+
+    metadata_file.write(get_version_metadata(scigraph_data_prod, scigraph_data_dev))
+    metadata_file.close()
 
 
 if __name__ == "__main__":

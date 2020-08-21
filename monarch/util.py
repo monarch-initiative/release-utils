@@ -15,26 +15,77 @@ logger = logging.getLogger(__name__)
 JSONType = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
 
 
-def _process_scigraph_categories(results) -> Dict[str,int]:
-    # dictionary of category:count, eg Node:1000
-    category_counts = {}
-    for result in results:
-        for category in result['NodeType']:
-            if category in category_counts:
-                category_counts[category] += result['NumberOfNodes']
-            else:
-                category_counts[category] = result['NumberOfNodes']
+def get_version_metadata(scigraph_prod: str, scigraph_dev: str) -> str:
+    """
+    :param scigraph_prod:
+    :param scigraph_dev:
+    :return:
+    """
+    output_md = str()
+    query = "dynamic/datasets.json"
 
-    return category_counts
+    dev_request = requests.get(scigraph_dev + query, timeout=120)
+    prod_request = requests.get(scigraph_prod + query, timeout=120)
+    try:
+        dev_response = dev_request.json()
+    except JSONDecodeError as json_exc:
+        raise JSONDecodeError(
+               "Cannot parse scigraph response for {}: {}".format(dev_request.url, json_exc.msg),
+               json_exc.doc,
+               json_exc.pos
+        )
+
+    try:
+        prod_response = prod_request.json()
+    except JSONDecodeError as json_exc:
+        raise JSONDecodeError(
+               "Cannot parse scigraph response for {}: {}".format(prod_request.url, json_exc.msg),
+               json_exc.doc,
+               json_exc.pos
+        )
+
+    dev_version = _process_scigraph_datasets(dev_response)
+    prod_version = _process_scigraph_datasets(prod_response)
+
+    output_md += 'Production build: '
+    output_md += add_href(prod_version, prod_version)
+    output_md += '  \n'
+
+    output_md += 'Beta build: '
+    output_md += add_href(dev_version, dev_version)
+
+    return output_md
+
+def _process_scigraph_datasets(dataset_graph) -> str:
+    """
+    :param dataset_graph:
+    :return: version
+    """
+    version = ''
+    for edge in dataset_graph['edges']:
+        if edge['pred'] == 'dcat:Distribution':
+            if edge['sub'].endswith('#ncbigene'):
+                version = edge['sub']\
+                    .replace('MonarchArchive:', 'https://archive.monarchinitiative.org/')\
+                    .replace('/#ncbigene', '')
+                break
+
+    return version
+
 
 
 def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
 
     category_cypher = "MATCH (n) RETURN labels(n) AS NodeType, count(n) AS NumberOfNodes"
 
+    cypher_endpoint = 'cypher/execute.json'
+
+    prod_url = scigraph_prod + cypher_endpoint
+    dev_url = scigraph_dev + cypher_endpoint
+
     output_md = str()
-    prod_results = get_scigraph_results(scigraph_prod, category_cypher, limit=1000)
-    dev_results = get_scigraph_results(scigraph_dev, category_cypher, limit=1000)
+    prod_results = get_scigraph_results(prod_url, category_cypher, limit=1000)
+    dev_results = get_scigraph_results(dev_url, category_cypher, limit=1000)
 
     if prod_results == 'timeout' or dev_results == 'timeout':
         formatted_diff = {"request timeout": '0'}
@@ -48,13 +99,13 @@ def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
     }
 
     sesh = Session()
-    prod_req = sesh.prepare_request(Request('GET', scigraph_prod, params=params))
-    dev_req = sesh.prepare_request(Request('GET', scigraph_dev, params=params))
+    prod_req = sesh.prepare_request(Request('GET', prod_url, params=params))
+    dev_req = sesh.prepare_request(Request('GET', dev_url, params=params))
 
     output_md += add_href(prod_req.url, "Production Query")
-    output_md += '\n\n'
+    output_md += '  \n'
     output_md += add_href(dev_req.url, "Dev Query")
-    output_md += '\n\n'
+    output_md += '  \n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
     diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
@@ -67,8 +118,13 @@ def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
 def get_scigraph_diff(scigraph_prod: str, scigraph_dev: str,
                       conf: dict, query_name: str) -> str:
     output_md = str()
-    prod_results = get_scigraph_results(scigraph_prod, conf['query'])[0]
-    dev_results = get_scigraph_results(scigraph_dev, conf['query'])[0]
+    cypher_endpoint = 'cypher/execute.json'
+
+    prod_url = scigraph_prod + cypher_endpoint
+    dev_url = scigraph_dev + cypher_endpoint
+
+    prod_results = get_scigraph_results(prod_url, conf['query'])[0]
+    dev_results = get_scigraph_results(dev_url, conf['query'])[0]
     if prod_results == 'timeout' or dev_results == 'timeout':
         formatted_diff = {"request timeout": '0'}
     else:
@@ -82,13 +138,13 @@ def get_scigraph_diff(scigraph_prod: str, scigraph_dev: str,
     }
 
     sesh = Session()
-    prod_req = sesh.prepare_request(Request('GET', scigraph_prod, params=params))
-    dev_req = sesh.prepare_request(Request('GET', scigraph_dev, params=params))
+    prod_req = sesh.prepare_request(Request('GET', prod_url, params=params))
+    dev_req = sesh.prepare_request(Request('GET', dev_url, params=params))
 
     output_md += add_href(prod_req.url, "Production Query")
-    output_md += '\n\n'
+    output_md += '  \n'
     output_md += add_href(dev_req.url, "Dev Query")
-    output_md += '\n\n'
+    output_md += '  \n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
     diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
@@ -169,11 +225,11 @@ def convert_diff_to_md(diff: Dict[str, Tuple[int, int]]) -> Dict[str, List[int]]
     for k, v in diff.items():
         count, diff = v
         if diff == 0:
-            diff_obj[k] = "{} ({})".format(count, diff)
+            diff_obj[k] = "{:,} ({:,})".format(count, diff)
         elif diff > 0:
-            diff_obj[k] = "{} (+{})".format(count, add_bold(diff))
+            diff_obj[k] = "{:,} (+{})".format(count, add_bold(diff))
         else:
-            diff_obj[k] = "{} (-{})".format(count, add_italics(abs(diff)))
+            diff_obj[k] = "{:,} (-{})".format(count, add_italics(abs(diff)))
 
     return diff_obj
 
@@ -216,3 +272,16 @@ def get_solr_so_pairs(
 
         params['start'] += params['rows']
     return results
+
+
+def _process_scigraph_categories(results) -> Dict[str,int]:
+    # dictionary of category:count, eg Node:1000
+    category_counts = {}
+    for result in results:
+        for category in result['NodeType']:
+            if category in category_counts:
+                category_counts[category] += result['NumberOfNodes']
+            else:
+                category_counts[category] = result['NumberOfNodes']
+
+    return category_counts
