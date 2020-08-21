@@ -142,7 +142,7 @@ def main():
         solr_diff_file.write('\n\n')
 
         diff_list = [(k, v) for k, v in formatted_diff.items()]
-        diff_list.sort(key=lambda tup: int(re.search(r'\d+', tup[1]).group(0)), reverse=True)
+        diff_list.sort(key=lambda tup: int(re.search(r'[\d,]+', tup[1]).group(0).replace(',', '')), reverse=True)
         solr_diff_file.write(add_md_table(diff_list, query['headers']))
         solr_diff_file.write('\n\n')
 
@@ -190,7 +190,7 @@ def main():
     scicat_file.close()
 
     ######## Scigraph version metadata ###
-    ################################
+    ######################################
 
     metadata_file.write(get_version_metadata(scigraph_data_prod, scigraph_data_dev))
     metadata_file.close()

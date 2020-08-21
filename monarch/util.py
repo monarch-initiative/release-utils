@@ -105,7 +105,7 @@ def get_scigraph_category_diff(scigraph_prod: str, scigraph_dev: str) -> str:
     output_md += add_href(prod_req.url, "Production Query")
     output_md += '  \n'
     output_md += add_href(dev_req.url, "Dev Query")
-    output_md += '  \n'
+    output_md += '  \n\n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
     diff_list.sort(key=lambda tup: int(re.search(r'[\d,]+', tup[1]).group(0).replace(',', '')), reverse=True)
@@ -144,7 +144,7 @@ def get_scigraph_diff(scigraph_prod: str, scigraph_dev: str,
     output_md += add_href(prod_req.url, "Production Query")
     output_md += '  \n'
     output_md += add_href(dev_req.url, "Dev Query")
-    output_md += '  \n'
+    output_md += '  \n\n'
 
     diff_list = [(k, v) for k, v in formatted_diff.items()]
     diff_list.sort(key=lambda tup: int(re.search(r'[\d,]+', tup[1]).group(0).replace(',', '')), reverse=True)
