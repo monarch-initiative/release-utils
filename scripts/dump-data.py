@@ -12,6 +12,7 @@ directory_name:
   - solr_filter_2
 """
 import requests
+from requests.adapters import HTTPAdapter
 import argparse
 from pathlib import Path
 import logging
@@ -35,7 +36,6 @@ def main():
     dir_path = Path(args.out)
 
     # Fetch all associations
-
     association_dir = 'all_associations'
     dump_dir = dir_path / association_dir
     dump_dir.mkdir(parents=True, exist_ok=True)
@@ -104,13 +104,17 @@ def generate_tsv(tsv_fh, solr, filters):
         'q': '*:*',
         'fq': filters,
     }
-    solr_request = requests.get(solr, params=count_params)
+
+    sesh = requests.Session()
+    sesh.mount('https://', HTTPAdapter(max_retries=10))
+    solr_request = sesh.get(solr, params=count_params)
+
     response = solr_request.json()
     resultCount = response['response']['numFound']
 
     if resultCount == 0:
-        logger.warn("No results found for {}"
-                    " with filters {}".format(tsv_fh.name, filters))
+        logger.warning("No results found for {}"
+                       " with filters {}".format(tsv_fh.name, filters))
 
     golr_params['rows'] = 1000
     golr_params['start'] = 0
@@ -132,4 +136,3 @@ def generate_tsv(tsv_fh, solr, filters):
 
 if __name__ == "__main__":
     main()
-
