@@ -13,6 +13,7 @@ directory_name:
 """
 import requests
 from requests.adapters import HTTPAdapter
+from requests.exceptions import ChunkedEncodingError
 import argparse
 from pathlib import Path
 import logging
@@ -128,10 +129,30 @@ def generate_tsv(tsv_fh, solr, filters):
             first_res = False
         else:
             golr_params['csv.header'] = 'false'
-        solr_request = requests.get(solr, params=golr_params)
-        solr_response = solr_request.text
+
+        solr_response = fetch_solr_doc(sesh, solr, golr_params)
+
         tsv_fh.write(solr_response)
         golr_params['start'] += golr_params['rows']
+
+
+def fetch_solr_doc(session, solr, params, retries=10):
+    solr_response = None
+
+    for ret in range(retries):
+        if solr_response:
+            break
+        try:
+            solr_request = session.get(solr, params=params)
+            solr_response = solr_request.text
+        except ChunkedEncodingError:
+            logger.warning("ChunkedEncodingError for params %s", params)
+
+    if not solr_response:
+        logger.error("Could not fetch solr docs with for params %s", params)
+        exit(1)
+
+    return solr_response
 
 
 if __name__ == "__main__":
