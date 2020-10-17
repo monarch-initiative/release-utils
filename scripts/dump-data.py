@@ -14,6 +14,7 @@ directory_name:
 import requests
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ChunkedEncodingError
+from json import decoder
 import argparse
 from pathlib import Path
 import logging
@@ -110,11 +111,16 @@ def generate_tsv(tsv_fh, solr, filters):
     sesh.mount('https://', HTTPAdapter(max_retries=10))
     solr_request = sesh.get(solr, params=count_params)
 
-    response = solr_request.json()
-    resultCount = response['response']['numFound']
 
-    if resultCount == 0:
-        logger.warning("No results found for {}"
+    try:
+        response = solr_request.json()
+        resultCount = response['response']['numFound']
+
+        if resultCount == 0:
+            logger.warning("No results found for {}"
+                           " with filters {}".format(tsv_fh.name, filters))
+    except decoder.JSONDecodeError:
+        logger.warning("JSONDecodeError for {}"
                        " with filters {}".format(tsv_fh.name, filters))
 
     golr_params['rows'] = 1000
