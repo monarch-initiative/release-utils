@@ -122,6 +122,7 @@ def generate_tsv(tsv_fh, solr, filters):
     except decoder.JSONDecodeError:
         logger.warning("JSONDecodeError for {}"
                        " with filters {}".format(tsv_fh.name, filters))
+        resultCount = 1
 
     golr_params['rows'] = 1000
     golr_params['start'] = 0
