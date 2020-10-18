@@ -20,6 +20,7 @@ from pathlib import Path
 import logging
 import yaml
 import gzip
+import time
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -122,7 +123,11 @@ def generate_tsv(tsv_fh, solr, filters):
     except decoder.JSONDecodeError:
         logger.warning("JSONDecodeError for {}"
                        " with filters {}".format(tsv_fh.name, filters))
-        resultCount = 1
+        time.sleep(300)
+
+        response = solr_request.json()
+        resultCount = response['response']['numFound']
+
 
     golr_params['rows'] = 1000
     golr_params['start'] = 0
@@ -154,6 +159,7 @@ def fetch_solr_doc(session, solr, params, retries=10):
             solr_response = solr_request.text
         except ChunkedEncodingError:
             logger.warning("ChunkedEncodingError for params %s", params)
+            time.sleep(300)
 
     if not solr_response:
         logger.error("Could not fetch solr docs with for params %s", params)
