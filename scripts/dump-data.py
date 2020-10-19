@@ -112,22 +112,27 @@ def generate_tsv(tsv_fh, solr, filters):
     sesh.mount('https://', HTTPAdapter(max_retries=10))
     solr_request = sesh.get(solr, params=count_params)
 
+    facet_response = None
+    retries = 10
+    for ret in range(retries):
+        if facet_response:
+            break
 
-    try:
-        response = solr_request.json()
-        resultCount = response['response']['numFound']
+        try:
+            facet_response = solr_request.json()
+            resultCount = facet_response['response']['numFound']
 
-        if resultCount == 0:
-            logger.warning("No results found for {}"
+            if resultCount == 0:
+                logger.warning("No results found for {}"
+                               " with filters {}".format(tsv_fh.name, filters))
+        except decoder.JSONDecodeError:
+            logger.warning("JSONDecodeError for {}"
                            " with filters {}".format(tsv_fh.name, filters))
-    except decoder.JSONDecodeError:
-        logger.warning("JSONDecodeError for {}"
-                       " with filters {}".format(tsv_fh.name, filters))
-        time.sleep(300)
+            time.sleep(500)
 
-        response = solr_request.json()
-        resultCount = response['response']['numFound']
-
+    if not facet_response:
+        logger.error("Could not fetch solr docs with for params %s", filters)
+        exit(1)
 
     golr_params['rows'] = 1000
     golr_params['start'] = 0
