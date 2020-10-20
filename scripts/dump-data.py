@@ -128,6 +128,7 @@ def generate_tsv(tsv_fh, solr, filters):
         except decoder.JSONDecodeError:
             logger.warning("JSONDecodeError for {}"
                            " with filters {}".format(tsv_fh.name, filters))
+            logger.warning("solr content: {}".format(solr_request.text))
             time.sleep(500)
 
     if not facet_response:
@@ -152,6 +153,8 @@ def generate_tsv(tsv_fh, solr, filters):
         tsv_fh.write(solr_response)
         golr_params['start'] += golr_params['rows']
 
+    sesh.close()
+
 
 def fetch_solr_doc(session, solr, params, retries=10):
     solr_response = None
@@ -160,7 +163,7 @@ def fetch_solr_doc(session, solr, params, retries=10):
         if solr_response:
             break
         try:
-            solr_request = session.get(solr, params=params)
+            solr_request = session.get(solr, params=params, stream=False)
             solr_response = solr_request.text
         except ChunkedEncodingError:
             logger.warning("ChunkedEncodingError for params %s", params)
