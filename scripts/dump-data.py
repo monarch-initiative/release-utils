@@ -55,6 +55,7 @@ def main():
 
     solr_request = requests.get(args.solr, params=assoc_params)
     response = solr_request.json()
+    solr_request.close()
 
     for facet in response['facet_counts']['facet_fields']['association_type']:
         association = facet[0]
@@ -81,11 +82,10 @@ def main():
 
 
 def generate_tsv(tsv_fh, solr, filters):
-    default_fields = '''
-        subject,subject_label,subject_taxon,subject_taxon_label,
-        object,object_label,relation,relation_label,evidence,evidence_label,
-        source,is_defined_by,qualifier
-    '''
+    default_fields = \
+        'subject,subject_label,subject_taxon,subject_taxon_label,object,'\
+        'object_label,relation,relation_label,evidence,evidence_label,source,'\
+        'is_defined_by,qualifier'
 
     golr_params = {
         'q': '*:*',
@@ -109,7 +109,9 @@ def generate_tsv(tsv_fh, solr, filters):
     }
 
     sesh = requests.Session()
-    sesh.mount('https://', HTTPAdapter(max_retries=10))
+    adapter = requests.adapters.HTTPAdapter(max_retries=10, pool_connections=100, pool_maxsize=100)
+    sesh.mount('https://', adapter)
+    sesh.mount('http://', adapter)
     solr_request = sesh.get(solr, params=count_params)
 
     facet_response = None
@@ -135,7 +137,7 @@ def generate_tsv(tsv_fh, solr, filters):
         logger.error("Could not fetch solr docs with for params %s", filters)
         exit(1)
 
-    golr_params['rows'] = 1000
+    golr_params['rows'] = 5000
     golr_params['start'] = 0
     golr_params['fq'] = filters
 
