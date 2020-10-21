@@ -74,7 +74,7 @@ def main():
 
         for file, filters in file_maps.items():
             dump_file = dump_dir / file
-            dump_file_fh = dump_file.open("w")
+            dump_file_fh = gzip.open(dump_file, 'wt')
 
             generate_tsv(dump_file_fh, args.solr, filters)
 
