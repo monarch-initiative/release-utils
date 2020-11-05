@@ -63,7 +63,7 @@ def _process_scigraph_datasets(dataset_graph) -> str:
     """
     version = ''
     for edge in dataset_graph['edges']:
-        if edge['pred'] == 'dcat:Distribution':
+        if edge['pred'] == 'dcat:distribution':
             if edge['sub'].endswith('#ncbigene'):
                 version = edge['sub']\
                     .replace('MonarchArchive:', 'https://archive.monarchinitiative.org/')\
