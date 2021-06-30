@@ -11,19 +11,30 @@ directory_name:
   - solr_filter_1
   - solr_filter_2
 """
-import requests
-from requests.adapters import HTTPAdapter
-from requests.exceptions import ChunkedEncodingError
+import json
 from json import decoder
 import argparse
+from enum import Enum
 from pathlib import Path
 import logging
 import yaml
 import gzip
 import time
 
+import requests
+from requests.adapters import HTTPAdapter
+from requests.exceptions import ChunkedEncodingError
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+class OutputType(str, Enum):
+    tsv = 'tsv'
+    jsonl = 'jsonl'
+
+
+OUTPUT_TYPES = set(OutputType._member_names_)
 
 
 def main():
@@ -31,11 +42,16 @@ def main():
     parser = argparse.ArgumentParser(usage=__doc__)
     parser.add_argument('--config', '-c', required=True, help='yaml configuration file')
     parser.add_argument('--out', '-o', required=False, help='output directory', default="./")
+    parser.add_argument('--output-format', '-O', required=False, help='output format', default="tsv")
     parser.add_argument('--solr', '-s', required=False,
                         default="https://solr-dev.monarchinitiative.org/solr/golr/select",
                         help='solr url')
 
     args = parser.parse_args()
+
+    if args.output_format not in OUTPUT_TYPES:
+        raise ValueError(f"output format not supported, supported formats are {OUTPUT_TYPES}")
+
     dir_path = Path(args.out)
 
     # Fetch all associations
@@ -59,10 +75,14 @@ def main():
 
     for facet in response['facet_counts']['facet_fields']['association_type']:
         association = facet[0]
-        file = "{}.all.tsv.gz".format(association)
+        file = f"{association}.all.{args.output_format}.gz"
         dump_file_fh = gzip.open(dump_dir / file, 'wt')
         filters = ['association_type:{}'.format(association)]
-        generate_tsv(dump_file_fh, args.solr, filters)
+
+        if args.output_format == 'tsv':
+            generate_tsv(dump_file_fh, args.solr, filters)
+        elif args.output_format == 'jsonl':
+            generate_jsonl(dump_file_fh, args.solr, filters)
 
     # Fetch associations configured in args.config
     conf_fh = open(args.config, 'r')
@@ -76,7 +96,10 @@ def main():
             dump_file = dump_dir / file
             dump_file_fh = gzip.open(dump_file, 'wt')
 
-            generate_tsv(dump_file_fh, args.solr, filters)
+            if args.output_format == 'tsv':
+                generate_tsv(dump_file_fh, args.solr, filters)
+            elif args.output_format == 'jsonl':
+                generate_jsonl(dump_file_fh, args.solr, filters)
 
             dump_file_fh.close()
 
@@ -153,6 +176,65 @@ def generate_tsv(tsv_fh, solr, filters):
         solr_response = fetch_solr_doc(sesh, solr, golr_params)
 
         tsv_fh.write(solr_response)
+        golr_params['start'] += golr_params['rows']
+
+    sesh.close()
+
+
+def generate_jsonl(fh, solr, filters):
+
+    #jsonl_writer = jsonlines.open(fh)
+
+    golr_params = {
+        'q': '*:*',
+        'wt': 'json',
+        'fl': '*',
+        'fq': filters,
+        'start': 0,
+        'rows': 100
+    }
+
+    count_params = {
+        'wt': 'json',
+        'rows': 0,
+        'q': '*:*',
+        'fq': filters,
+    }
+
+    sesh = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(max_retries=10, pool_connections=100, pool_maxsize=100)
+    sesh.mount('https://', adapter)
+    sesh.mount('http://', adapter)
+    solr_request = sesh.get(solr, params=count_params)
+
+    facet_response = None
+    retries = 10
+    for ret in range(retries):
+        if facet_response:
+            break
+
+        try:
+            facet_response = solr_request.json()
+            resultCount = facet_response['response']['numFound']
+
+            if resultCount == 0:
+                logger.warning("No results found for {}"
+                               " with filters {}".format(fh.name, filters))
+        except decoder.JSONDecodeError:
+            logger.warning("JSONDecodeError for {}"
+                           " with filters {}".format(fh.name, filters))
+            logger.warning("solr content: {}".format(solr_request.text))
+            time.sleep(500)
+
+    if not facet_response:
+        logger.error("Could not fetch solr docs with for params %s", filters)
+        exit(1)
+
+    while golr_params['start'] < resultCount:
+        solr_response = fetch_solr_doc(sesh, solr, golr_params)
+        docs = json.loads(solr_response)['response']['docs']
+        for doc in docs:
+            fh.write(f"{json.dumps(doc)}\n")
         golr_params['start'] += golr_params['rows']
 
     sesh.close()
