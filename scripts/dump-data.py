@@ -73,7 +73,7 @@ def main():
     response = solr_request.json()
     solr_request.close()
 
-    for facet in response['facet_counts']['facet_fields']['association_type']:
+    for facet in reversed(response['facet_counts']['facet_fields']['association_type']):
         association = facet[0]
         file = f"{association}.all.{args.output_format}.gz"
         dump_file_fh = gzip.open(dump_dir / file, 'wt')
@@ -83,6 +83,8 @@ def main():
             generate_tsv(dump_file_fh, args.solr, filters)
         elif args.output_format == 'jsonl':
             generate_jsonl(dump_file_fh, args.solr, filters)
+
+        logger.info(f"finished writing {file}")
 
     # Fetch associations configured in args.config
     conf_fh = open(args.config, 'r')
@@ -139,6 +141,7 @@ def generate_tsv(tsv_fh, solr, filters):
 
     facet_response = None
     retries = 10
+    resultCount = 0
     for ret in range(retries):
         if facet_response:
             break
@@ -191,7 +194,7 @@ def generate_jsonl(fh, solr, filters):
         'fl': '*',
         'fq': filters,
         'start': 0,
-        'rows': 1000
+        'rows': 5000
     }
 
     count_params = {
@@ -209,6 +212,7 @@ def generate_jsonl(fh, solr, filters):
 
     facet_response = None
     retries = 10
+    resultCount = 0
     for ret in range(retries):
         if facet_response:
             break
