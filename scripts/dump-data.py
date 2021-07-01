@@ -191,7 +191,7 @@ def generate_jsonl(fh, solr, filters):
         'fl': '*',
         'fq': filters,
         'start': 0,
-        'rows': 100
+        'rows': 1000
     }
 
     count_params = {
